@@ -149,7 +149,54 @@ function themVaoGioHang(masp, tensp) {
 
 // Hàm get set cho người dùng hiện tại đã đăng nhập
 function getCurrentUser() {
-    return JSON.parse(window.localStorage.getItem('CurrentUser')); // Lấy dữ liệu từ localstorage
+    const currentUser = JSON.parse(localStorage.getItem('CurrentUser'));
+
+    // Check if currentUser and token are available
+    if (currentUser && currentUser.token) {
+        const token = currentUser.token;
+
+        // Step 2: Decode the JWT token
+        function decodeJWT(token) {
+            // Split the token into its parts
+            const parts = token.split('.');
+
+            // Check if the token has 3 parts (header, payload, signature)
+            if (parts.length !== 3) {
+                throw new Error('Invalid JWT token');
+            }
+
+            // Decode the base64 URL encoded parts
+            const decodeBase64Url = (base64Url) => {
+                let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                while (base64.length % 4) {
+                    base64 += '=';
+                }
+                return atob(base64);
+            };
+
+            // Decode header and payload
+            const header = JSON.parse(decodeBase64Url(parts[0]));
+            const payload = JSON.parse(decodeBase64Url(parts[1]));
+
+            return {
+                header: header,
+                payload: payload
+            };
+        }
+
+        // Decode the token and log the payload
+        const decoded = decodeJWT(token);
+        console.log(decoded.payload);  // Log the decoded payload
+        return decoded.payload;
+
+    } else {
+        console.log('No user or token found in localStorage');
+    }
+
+    // return currentUser;
+
+    // console.log(window.localStorage.getItem('CurrentUser').token);
+    // return JSON.parse(window.localStorage.getItem('CurrentUser')); // Lấy dữ liệu từ localstorage
 }
 
 function setCurrentUser(u) {
@@ -181,55 +228,93 @@ function updateListUser(u, newData) {
     setListUser(list);
 }
 
-function logIn(form) {
-    // Lấy dữ liệu từ form
-    var name = form.username.value;
-    var pass = form.pass.value;
-    var newUser = new User(name, pass);
+function logIn(event) {
+    event.preventDefault();
 
-    // Lấy dữ liệu từ danh sách người dùng localstorage
-    var listUser = getListUser();
+    // Get the form element
+    var form = event.target;
 
-    // Kiểm tra xem dữ liệu form có khớp với người dùng nào trong danh sách ko
-    for (var u of listUser) {
-        if (equalUser(newUser, u)) {
-            if(u.off) {
-                alert('Tài khoản này đang bị khoá. Không thể đăng nhập.');
-                return false;
-            }
+    // Get data from the form
+    var getEmail = form.email.value; // Tên đăng nhập
+    var getPass = form.pass.value; // Mật khẩu
 
-            setCurrentUser(u);
+    alert("email " + getEmail + "Pass: " + getPass);
+
+    // Create user object
+    var newUser = {
+        email: getEmail, // Key must match the backend's expected field names
+        password: getPass  // Key must match the backend's expected field names
+    };
+
+    // Send POST request to API
+    $.ajax({
+        url: 'http://localhost:8088/shop/api/v1/auth/login',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(newUser), // Convert object to JSON string
+        success: function(response) {
+            alert('Đăng nhập thành công');
+            setCurrentUser(response.data);
 
             // Reload lại trang -> sau khi reload sẽ cập nhật luôn giỏ hàng khi hàm setupEventTaiKhoan chạy
             location.reload();
             return false;
+        },
+        error: function(xhr, status, error) {
+            var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'Có lỗi xảy ra!';
+            alert(errorMessage); // Display error message from backend
         }
-    }
+    });
 
-    // Đăng nhập vào admin
-    for (var ad of adminInfo) {
-        if (equalUser(newUser, ad)) {
-            alert('Xin chào admin .. ');
-            window.localStorage.setItem('admin', true);
-            window.location.assign('admin.html');
-            return false;
-        }
-    }
+    // // Lấy dữ liệu từ danh sách người dùng localstorage
+    // var listUser = getListUser();
+    //
+    // // Kiểm tra xem dữ liệu form có khớp với người dùng nào trong danh sách ko
+    // for (var u of listUser) {
+    //     if (equalUser(newUser, u)) {
+    //         if(u.off) {
+    //             alert('Tài khoản này đang bị khoá. Không thể đăng nhập.');
+    //             return false;
+    //         }
+    //
+    //         setCurrentUser(u);
+    //
+    //         // Reload lại trang -> sau khi reload sẽ cập nhật luôn giỏ hàng khi hàm setupEventTaiKhoan chạy
+    //         location.reload();
+    //         return false;
+    //     }
+    // }
+    //
+    // // Đăng nhập vào admin
+    // for (var ad of adminInfo) {
+    //     if (equalUser(newUser, ad)) {
+    //         alert('Xin chào admin .. ');
+    //         window.localStorage.setItem('admin', true);
+    //         window.location.assign('admin.html');
+    //         return false;
+    //     }
+    // }
 
     // Trả về thông báo nếu không khớp
-    alert('Nhập sai tên hoặc mật khẩu !!!');
-    form.username.focus();
+    // alert('Nhập sai tên hoặc mật khẩu !!!');
+    // form.username.focus();
     return false;
 }
-function signUp(form) {
-    var ho = form.ho.value; // Họ
-    var ten = form.ten.value; // Tên
-    var email = form.email.value; // Địa chỉ email
-    var username = form.newUser.value; // Tên đăng nhập
-    var pass = form.newPass.value; // Mật khẩu
+function signUp(event) {
+    event.preventDefault(); // Prevent the form from submitting the default way
 
-    // Tạo đối tượng người dùng
-    var newUser  = {
+    // Get the form element
+    var form = event.target;
+
+    // Collect form data
+    var ho = form.lastName.value; // Họ
+    var ten = form.firstName.value; // Tên
+    var email = form.email.value; // Địa chỉ email
+    var username = form.userName.value; // Tên đăng nhập
+    var pass = form.password.value; // Mật khẩu
+
+    // Create user object
+    var newUser = {
         lastName: ho,
         firstName: ten,
         userName: username,
@@ -237,23 +322,23 @@ function signUp(form) {
         password: pass
     };
 
-    // Gửi yêu cầu POST đến API
+    // Send POST request to API
     $.ajax({
-        url: 'http://localhost:8088/api/v1/users/add',
+        url: 'http://localhost:8088/shop/api/v1/users/add',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(newUser ),
+        data: JSON.stringify(newUser),
         success: function(response) {
             alert('Đăng kí thành công, Bạn sẽ được tự động đăng nhập!');
-            location.reload(); // Reload trang
+            location.reload(); // Reload the page
         },
         error: function(xhr, status, error) {
             var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'Có lỗi xảy ra!';
-            alert(errorMessage); // Hiển thị thông báo lỗi từ backend
+            alert(errorMessage); // Display error message from backend
         }
     });
 
-    return false; // Ngăn chặn hành vi mặc định của form
+    return false; // Prevent default form submission explicitly as a safeguard
 }
 
 //function signUp(form) {
@@ -314,6 +399,25 @@ function checkTaiKhoan() {
         showTaiKhoan(true);
     }
 }
+
+function checkTaiKhoan2() {
+    const currentUser = getCurrentUser(); // Get the current user from localStorage
+
+    if (currentUser) {
+        // If user is logged in, update the link text to display username
+        const taiKhoanText = document.getElementById('taiKhoanText');
+        taiKhoanText.textContent = `Xin chào, ${currentUser.sub || currentUser.sub || 'User'}`;
+    } else {
+        // If no user is logged in, keep the original "Tài khoản" text
+        const taiKhoanText = document.getElementById('taiKhoanText');
+        taiKhoanText.textContent = 'Tài khoản';
+    }
+}
+
+// Run this function on page load
+document.addEventListener('DOMContentLoaded', function () {
+    checkTaiKhoan2();  // Update the account link based on login status
+});
 
 // Tạo event, hiệu ứng cho form tài khoản
 function setupEventTaiKhoan() {
@@ -661,14 +765,14 @@ function addContainTaiKhoan() {
                 <div id="login">
                     <h1>Chào mừng bạn trở lại!</h1>
 
-                    <form onsubmit="return logIn(this);">
+                    <form onsubmit="return logIn(event);">
 
                         <div class="field-wrap">
                             <label>
-                                Tên đăng nhập<span class="req">*</span>
+                                Email: <span class="req">*</span>
                             </label>
-                            <input name='username' type="text" required autocomplete="off" />
-                        </div> <!-- /user name -->
+                            <input name='email' type="email" required autocomplete="off" />
+                        </div> <!-- /email -->
 
                         <div class="field-wrap">
                             <label>
@@ -678,7 +782,7 @@ function addContainTaiKhoan() {
                         </div> <!-- pass -->
 
                         <p class="forgot">
-                            <a href="#" onclick="openForgotPasswordPopup()">Quên mật khẩu?</a>
+                            <a href="#" onclick="login()">Quên mật khẩu?</a>
                         </p>
 
                         <button type="submit" class="button button-block" />Tiếp tục</button>
@@ -690,7 +794,7 @@ function addContainTaiKhoan() {
                 <div id="signup">
                     <h1>Đăng kí miễn phí</h1>
 
-                    <form onsubmit="return signUp(this);">
+                    <form onsubmit="return signUp(event);">
 
                         <div class="top-row">
                             <div class="field-wrap">
@@ -824,6 +928,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // Show the login tab by default
     tabContents[0].style.display = "block";
 });
+
+function login() {
+    alert("Login to page")
+}
 
 function openForgotPasswordPopup() {
     alert("LMAOOoo")

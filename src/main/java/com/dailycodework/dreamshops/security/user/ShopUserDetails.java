@@ -32,7 +32,7 @@ public class ShopUserDetails implements UserDetails {
 
            return new ShopUserDetails(
                    user.getId(),
-                   user.getEmail(),
+                   user.getUserName(),
                    user.getPassword(),
                    authorities);
        }
