@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tin tức công nghệ - CITYMOBILE</title>
+    <link rel="shortcut icon" href="img/favicon.ico" />
+
+    <!-- Load font awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        crossorigin="anonymous">
+
+    <!-- our files -->
+    <!-- css -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/topnav.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/taikhoan.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/tintuc.css">
+
+    <!-- js -->
+    <script src="data/products.js"></script>
+	<script src="js/dungchung.js"></script>
+    <script>
+        window.onload = function () {
+            khoiTao();
+            // thêm tags (từ khóa) vào khung tìm kiếm
+            var tags = ["Samsung", "iPhone", "Huawei", "Oppo", "Mobi"];
+            for (var t of tags) addTags(t, "index.html?search=" + t);
+        }
+    </script>
+
+</head>
+
+<body>
+    <script> addTopNav();</script>
+
+    <section style="min-height: 85vh">
+        <script> addHeader(); </script>
+            <div class="body-tintuc">
+            <div class="tintuc-info">
+                <a href="https://www.24h.com.vn/thoi-trang-hi-tech/iphone-17-pro-max-se-ra-doi-voi-tinh-nang-dang-rat-duoc-ifan-mong-doi-c407a1613783.html" target="_blank">
+                    <img src="https://icdn.24h.com.vn/upload/4-2024/images/2024-10-26/picture-1-1729923190-580-width740height416.png" width="1200px">
+                    <h2>iPhone 17 Pro Max sẽ ra đời với tính năng đang rất được iFan mong đợi
+                    </h2>
+                </a>
+                <h5>24h.com.vn &emsp;5 giờ trước </h5>
+            </div>
+            <div class="tintuc-info">
+                <a href="https://www.24h.com.vn/thoi-trang-hi-tech/galaxy-z-fold-7-se-di-ve-dau-khi-co-galaxy-z-fold-special-edition-c407a1613646.html" target="_blank">
+                    <img src="https://icdn.24h.com.vn/upload/4-2024/images/2024-10-25/Samsung-vua-moi-khai-tu-Galaxy-Z-Fold-7-bang-Galaxy-Z-Fold-Special-Editionindexphp-huawei-mate-xt-preview-1729864236-689-width1200height800.jpg">
+                    <h2>Galaxy Z Fold 7 sẽ đi về đâu khi có Galaxy Z Fold Special Edition?
+                    </h2>
+                </a>
+    
+                <h5>24h.com.vn &emsp; 1 ngày trước</h5>
+            </div>
+            <div class="tintuc-info">
+                <a href="https://www.24h.com.vn/thoi-trang-hi-tech/apple-lay-lai-cai-uy-truoc-huawei-va-xiaomi-tai-trung-quoc-c407a1613695.html" target="_blank">
+                    <img src="https://cdn.24h.com.vn/upload/4-2024/images/2024-10-26/1-1729899249-662-width740height495.jpg" width="1200px">
+                    <h2>Apple lấy lại cái uy trước Huawei và Xiaomi tại Trung Quốc
+                    </h2>
+                </a>
+            
+                <h5>24h.com.vn &emsp; 1 ngày trước</h5>
+            </div>
+            <div class="tintuc-info">
+                <a href="https://cellphones.com.vn/sforum/oppo-a3x-4g-ra-mat" target="_blank">
+                    <img src="https://cdn-media.sforum.vn/storage/app/media/trannghia/OPPO-A3x-4G-ra-mat-2.jpg">
+                    <h2>OPPO A3x 4G ra mắt với độ bền chuẩn quân đội Mỹ, chip lạ Snapdragon 6s 4G Gen 1 và pin 5100 mAh, giá từ 2.71 triệu đồng
+
+                    </h2>
+                </a>
+            
+                <h5>Cellphones &emsp; 2 ngày trước</h5>
+            </div>
+            <div class="tintuc-info" style="border-bottom: 0;">
+                <a href="https://cellphones.com.vn/sforum/xiaomi-15-series-ra-mat-vao-ngay-29-10" target="_blank">
+                    <img src="https://cdn-media.sforum.vn/storage/app/media/trannghia/Xiaomi-15-series-HyperOS-2-ngay-ra-mat-cover.jpg" >
+                    <h2>Xiaomi 15 Series và HyperOS 2.0 sẽ ra mắt vào ngày 29/10</h2>
+                </a>
+        
+                <h5>Hải Nam &emsp; 3 ngày trước </h5>
+            </div> 
+
+        </div>
+
+    </section>
+
+    <script> addContainTaiKhoan(); </script>
+
+    <div class="footer">
+        <script>addFooter();</script>
+        
+    </div>
+
+    <i class="fa fa-arrow-up" id="goto-top-page" onclick="gotoTop()"></i>
+
+</body>
+
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quên Mật Khẩu - Mã Xác Nhận</title>
+    <style>
+        /* Basic Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Overlay styles */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Popup styles */
+        .forgot-password-modal {
+            width: 350px;
+            background-color: #2e3c44;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-align: center;
+        }
+
+        .forgot-password-modal h2 {
+            margin-top: 0;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password-modal p {
+            font-size: 14px;
+            color: #b0c4c4;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: none;
+            background-color: #3a4d57;
+            color: white;
+        }
+
+        .button {
+            width: 100%;
+            padding: 12px;
+            background-color: #00a676;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .back-to-login {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #b0c4c4;
+        }
+
+        .back-to-login a {
+            color: #00a676;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .overlay.show {
+            display: flex;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Button to open the popup -->
+    <button onclick="openForgotPasswordPopup()" style="padding: 10px 20px; font-size: 16px;">Quên mật khẩu?</button>
+
+    <!-- Forgot Password Popup Structure -->
+    <div class="overlay" id="forgotPasswordOverlay">
+        <div class="forgot-password-modal" id="emailForm">
+            <h2>Quên mật khẩu</h2>
+            <p>Vui lòng nhập địa chỉ email của bạn để nhận mã xác nhận.</p>
+            <div class="input-field">
+                <label for="forgotEmail">Email*</label>
+                <input type="email" id="forgotEmail" name="forgotEmail" placeholder="Nhập email của bạn">
+            </div>
+            <button class="button" onclick="sendVerificationCode()">GỬI MÃ XÁC NHẬN</button>
+            <div class="back-to-login">
+                <a onclick="closeForgotPasswordPopup()">Trở về đăng nhập</a>
+            </div>
+        </div>
+
+        <!-- Verification Code Form -->
+        <div class="forgot-password-modal" id="codeForm" style="display: none;">
+            <h2>Xác nhận mã</h2>
+            <p>Vui lòng nhập mã xác nhận đã được gửi tới email của bạn.</p>
+            <div class="input-field">
+                <label for="verificationCode">Mã xác nhận*</label>
+                <input type="text" id="verificationCode" name="verificationCode" placeholder="Nhập mã xác nhận">
+            </div>
+            <button class="button" onclick="verifyCode()">XÁC NHẬN MÃ</button>
+            <div class="back-to-login">
+                <a onclick="closeForgotPasswordPopup()">Trở về đăng nhập</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to open the Forgot Password popup
+        function openForgotPasswordPopup() {
+            document.getElementById('forgotPasswordOverlay').classList.add('show');
+            document.getElementById('emailForm').style.display = 'block';
+            document.getElementById('codeForm').style.display = 'none';
+        }
+
+        // Function to close the Forgot Password popup
+        function closeForgotPasswordPopup() {
+            document.getElementById('forgotPasswordOverlay').classList.remove('show');
+        }
+
+        // Function to simulate sending a verification code
+        function sendVerificationCode() {
+            const email = document.getElementById('forgotEmail').value;
+            if (email) {
+                alert("Mã xác nhận đã được gửi đến " + email);
+                document.getElementById('emailForm').style.display = 'none';
+                document.getElementById('codeForm').style.display = 'block';
+            } else {
+                alert("Vui lòng nhập địa chỉ email hợp lệ.");
+            }
+        }
+
+        // Function to simulate verifying the code
+        function verifyCode() {
+            const code = document.getElementById('verificationCode').value;
+            if (code === "123456") { // Simulated verification code
+                alert("Mã xác nhận hợp lệ. Bạn có thể đặt lại mật khẩu.");
+                closeForgotPasswordPopup();
+            } else {
+                alert("Mã xác nhận không đúng. Vui lòng thử lại.");
+            }
+        }
+    </script>
+</body>
+</html>

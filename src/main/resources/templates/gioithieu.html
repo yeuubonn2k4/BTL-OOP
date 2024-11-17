@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Giới thiệu - CITYMOBILE</title>
+    <link rel="shortcut icon" href="img/favicon.ico" />
+
+    <!-- Load font awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous">
+
+    <!-- our files -->
+    <!-- css -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/topnav.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/banner.css">
+    <link rel="stylesheet" href="css/taikhoan.css">
+    <link rel="stylesheet" href="css/trangchu.css">
+    <link rel="stylesheet" href="css/home_products.css">
+    <link rel="stylesheet" href="css/pagination_phantrang.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <!-- js -->
+    <script src="data/products.js"></script>
+    <script src="js/dungchung.js"></script>
+    <script src="js/dungchung.js"></script>
+    <script src="js/trangchu.js"></script>
+    <script>
+        window.onload = function () {
+            khoiTao();
+            // thêm tags (từ khóa) vào khung tìm kiếm
+            var tags = ["Samsung", "iPhone", "Huawei", "Oppo", "Mobi"];
+            for (var t of tags) addTags(t, "index.html?search=" + t);
+        }
+    </script>
+</head>
+
+<body style="background-image: url('https://contentstatic.techgig.com/photo/101616157/apple-iphone-15-launch-date-price-specifications-rumors-and-more.jpg?12104'); background-size: cover; background-repeat: no-repeat;">
+
+<header>
+    <script> addTopNav(); </script>
+    <!-- Logo and Site Name -->
+    <div style="display: flex; align-items: center; padding: 10px;">
+        <! --<img src="https://intriphat.com/wp-content/uploads/2024/04/logo-cua-hang-dien-thoai-10.jpg" alt="Logo" style="height: 120px; margin-right: 10px;">
+    </div>
+    <script> addHeader(); </script>
+</header>
+
+<section style="min-height: 85vh">
+    <div class="page-gt">
+        <class class="page-info"></class>
+
+        <br />
+        <p style="font-size: 30px; color:black; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);"> <b>Xin chào mừng bạn đã đến với CITYMOBILE của chúng tôi.</b></p>
+
+        <p style="font-size: 30px; color:black; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);">
+            Với bề dày gần 10 năm kinh nghiệm và uy tín đã tạo được trong những năm vừa qua, chúng tôi luôn đem lại cho khách hàng sự hài lòng và thỏa mãn với tất cả các sản phẩm của mình.
+            Bên cạnh đó là đội ngũ nhân viên nhiệt tình chu đáo và đầy kinh nghiệm của chúng tôi luôn đưa được ra cho khách hàng những thông tin có giá trị và giúp khách hàng lựa chọn được những sản phẩm phù hợp nhất. <br /><br />
+            Để nâng cao thương hiệu của mình, mục tiêu của chúng tôi trong thời gian tới là cung cấp đến tận tay khách hàng những sản phẩm chính hãng với chất lượng đảm bảo và uy tín cũng như giá cả hợp lý nhất. <br /><br />
+            Chúng tôi luôn tâm đắc quan niệm : <br />
+        </p>
+        <p style="font-size: 30px; color:black; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);"><em>“Nếu những gì chúng tôi không có, nghĩa là bạn không cần."</em><br /></p>
+        <p style="font-size: 30px; color:black; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);"><b>Chúng tôi xin chân thành cảm ơn tất cả các khách hàng đã, đang và sẽ ủng hộ chúng tôi.</b></p>
+    </div>
+</section>
+
+<script> addContainTaiKhoan(); </script>
+
+<div class="footer">
+    <script>addFooter();</script>
+</div>
+
+<i class="fa fa-arrow-up" id="goto-top-page" onclick="gotoTop()"></i>
+</body>
+
+</html>
