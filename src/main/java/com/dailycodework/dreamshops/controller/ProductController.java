@@ -162,15 +162,15 @@ public class ProductController {
     }
 
     // New end point 2
-    @GetMapping("/distinct/brands")
-    public ResponseEntity<ApiResponse> getAllDistinctBrands() {
-        try {
-            List<String> brands = productService.getAllDistinctBrands();
-            return  ResponseEntity.ok(new ApiResponse("success", brands));
-        } catch (Exception e) {
-            return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
-        }
-    }
+//    @GetMapping("/distinct/brands")
+//    public ResponseEntity<ApiResponse> getAllDistinctBrands() {
+//        try {
+//            List<String> brands = productService.getAllDistinctBrands();
+//            return  ResponseEntity.ok(new ApiResponse("success", brands));
+//        } catch (Exception e) {
+//            return ResponseEntity.ok(new ApiResponse(e.getMessage(), null));
+//        }
+//    }
 
 
 //    @GetMapping("/product/count/by-brand/and-name")

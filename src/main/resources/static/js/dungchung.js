@@ -1,6 +1,6 @@
 var adminInfo = [{
-    "username": "admin",
-    "pass": "adadad"
+    email: "admin@gmail.com",
+    password: "adadad"
 }];
 
 function getListAdmin() {
@@ -246,6 +246,16 @@ function logIn(event) {
         password: getPass  // Key must match the backend's expected field names
     };
 
+    // Đăng nhập vào admin
+    for (var ad of adminInfo) {
+        if (equalUser(newUser, ad)) {
+            alert('Xin chào admin .. ');
+            window.localStorage.setItem('admin', true);
+            window.location.assign('admin.html');
+            return false;
+        }
+    }
+
     // Send POST request to API
     $.ajax({
         url: 'http://localhost:8088/shop/api/v1/auth/login',
@@ -285,19 +295,10 @@ function logIn(event) {
     //     }
     // }
     //
-    // // Đăng nhập vào admin
-    // for (var ad of adminInfo) {
-    //     if (equalUser(newUser, ad)) {
-    //         alert('Xin chào admin .. ');
-    //         window.localStorage.setItem('admin', true);
-    //         window.location.assign('admin.html');
-    //         return false;
-    //     }
-    // }
 
     // Trả về thông báo nếu không khớp
-    // alert('Nhập sai tên hoặc mật khẩu !!!');
-    // form.username.focus();
+    alert('Nhập sai tên hoặc mật khẩu !!!');
+    form.username.focus();
     return false;
 }
 function signUp(event) {
@@ -402,15 +403,23 @@ function checkTaiKhoan() {
 
 function checkTaiKhoan2() {
     const currentUser = getCurrentUser(); // Get the current user from localStorage
+    const taiKhoanText = document.getElementById('taiKhoanText');
+    const menuMember = document.getElementById('menuMember');
 
     if (currentUser) {
         // If user is logged in, update the link text to display username
         const taiKhoanText = document.getElementById('taiKhoanText');
         taiKhoanText.textContent = `Xin chào, ${currentUser.sub || currentUser.sub || 'User'}`;
+
+        // Show the dropdown menu when clicked
+        menuMember.classList.remove('hide');
     } else {
         // If no user is logged in, keep the original "Tài khoản" text
-        const taiKhoanText = document.getElementById('taiKhoanText');
+        // const taiKhoanText = document.getElementById('taiKhoanText');
+        // taiKhoanText.textContent = 'Tài khoản';
+        // Reset the text and hide the dropdown menu
         taiKhoanText.textContent = 'Tài khoản';
+        menuMember.classList.add('hide');
     }
 }
 
@@ -418,6 +427,22 @@ function checkTaiKhoan2() {
 document.addEventListener('DOMContentLoaded', function () {
     checkTaiKhoan2();  // Update the account link based on login status
 });
+
+// Toggle the display of the member menu
+function toggleMemberMenu() {
+    const menuMember = document.getElementById('menuMember');
+    menuMember.classList.toggle('hide');
+}
+
+// Log the user out
+function logOut() {
+    // Clear the user from localStorage
+    localStorage.removeItem('CurrentUser');
+
+    // Optionally redirect to the login page
+    alert('Đăng xuất thành công!');
+    location.reload();
+}
 
 // Tạo event, hiệu ứng cho form tài khoản
 function setupEventTaiKhoan() {

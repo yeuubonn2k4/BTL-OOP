@@ -1,41 +1,73 @@
 package com.dailycodework.dreamshops.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Table(name = "product")
+@Builder
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false, length = 255)
     private String name;
-    private String brand;
+
+    @Column(length = 100)
+    private String company;
+
+    @Column(length = 255)
+    private String img;
+
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal price;
-    private int inventory;
-    private String description;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    private Integer star;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images;
+    @Column(name = "rate_count")
+    private Integer rateCount;
 
-    public Product(String name, String brand, BigDecimal price, int inventory, String description, Category category) {
-        this.name = name;
-        this.brand = brand;
-        this.price = price;
-        this.inventory = inventory;
-        this.description = description;
-        this.category = category;
-    }
+    @Column(name = "promo_name", length = 50)
+    private String promoName;
+
+    @Column(name = "promo_value", length = 50)
+    private String promoValue;
+
+    @Column(length = 100)
+    private String screen;
+
+    @Column(length = 50)
+    private String os;
+
+    @Column(length = 50)
+    private String camara;
+
+    @Column(name = "camara_front", length = 50)
+    private String camaraFront;
+
+    @Column(length = 100)
+    private String cpu;
+
+    @Column(length = 20)
+    private String ram;
+
+    @Column(length = 20)
+    private String rom;
+
+    @Column(name = "micro_usb", length = 100)
+    private String microUsb;
+
+    @Column(length = 50)
+    private String battery;
+
+    @Column(length = 20, unique = true, nullable = false)
+    private String masp;
 }

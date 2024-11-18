@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,17 +33,10 @@ public class ProductService implements IProductService {
 
     @Override
     public Product addProduct(AddProductRequest request) {
-        if (productExists(request.getName(), request.getBrand())) {
-            throw new AlreadyExistsException(request.getBrand() + " "
-                    + request.getName() + " already exists, you may update this product instead!");
+        if (productExists(request.getMasp())) {
+            throw new AlreadyExistsException(request.getMasp() + " already exists, you may update this product instead!");
         }
-        Category category = Optional.ofNullable(categoryRepository.findByName(request.getCategory().getName()))
-                .orElseGet(() -> {
-                    Category newCategory = new Category(request.getCategory().getName());
-                    return categoryRepository.save(newCategory);
-                });
-        request.setCategory(category);
-        return productRepository.save(createProduct(request, category));
+        return productRepository.save(createProduct(request));
     }
 
 //    @Override
@@ -50,19 +44,40 @@ public class ProductService implements IProductService {
 //        return productRepository.fin
 //    }
 
-    private boolean productExists(String name, String brand) {
-        return productRepository.existsByNameAndBrand(name, brand);
+    private boolean productExists(String masp) {
+        return productRepository.existByMaSP(masp);
     }
 
-    private Product createProduct(AddProductRequest request, Category category) {
-        return new Product(
-                request.getName(),
-                request.getBrand(),
-                request.getPrice(),
-                request.getInventory(),
-                request.getDescription(),
-                category
-        );
+    private Product createProduct(AddProductRequest request) {
+        Product product = new Product();
+        product.setName(request.getName());
+        product.setCompany(request.getCompany());
+        product.setImg(request.getImg());
+        product.setPrice(request.getPrice()); // Convert price to BigDecimal
+        product.setStar(request.getStar());
+        product.setRateCount(request.getRateCount());
+
+        // Promo details
+        if (request.getPromo() != null) {
+            product.setPromoName(request.getPromo().getName());
+            product.setPromoValue(request.getPromo().getValue());
+        }
+
+        // Detail information
+        if (request.getDetail() != null) {
+            product.setScreen(request.getDetail().getScreen());
+            product.setOs(request.getDetail().getOs());
+            product.setCamara(request.getDetail().getCamara());
+            product.setCamaraFront(request.getDetail().getCamaraFront());
+            product.setCpu(request.getDetail().getCpu());
+            product.setRam(request.getDetail().getRam());
+            product.setRom(request.getDetail().getRom());
+            product.setMicroUsb(request.getDetail().getMicroUSB());
+            product.setBattery(request.getDetail().getBattery());
+        }
+
+        product.setMasp(request.getMasp());
+        return product;
     }
 
     @Override
@@ -73,30 +88,30 @@ public class ProductService implements IProductService {
 
     @Override
     public void deleteProductById(Long id) {
-        List<CartItem> cartItems = cartItemRepository.findByProductId(id);
-        List<OrderItem> orderItems = orderItemRepository.findByProductId(id);
-        productRepository.findById(id)
-                .ifPresentOrElse(product -> {
-                    // Functional approach for category removal
-                    Optional.ofNullable(product.getCategory())
-                            .ifPresent(category -> category.getProducts().remove(product));
-                    product.setCategory(null);
-
-                    // Functional approach for updating cart items
-                    cartItems.stream()
-                            .peek(cartItem -> cartItem.setProduct(null))
-                            .peek(CartItem::setTotalPrice)
-                            .forEach(cartItemRepository::save);
-
-                    // Functional approach for updating order items
-                    orderItems.stream()
-                            .peek(orderItem -> orderItem.setProduct(null))
-                            .forEach(orderItemRepository::save);
-
-                    productRepository.delete(product);
-                }, () -> {
-                    throw new EntityNotFoundException("Product not found!");
-                });
+//        List<CartItem> cartItems = cartItemRepository.findByProductId(id);
+//        List<OrderItem> orderItems = orderItemRepository.findByProductId(id);
+//        productRepository.findById(id)
+//                .ifPresentOrElse(product -> {
+//                    // Functional approach for category removal
+//                    Optional.ofNullable(product.getCategory())
+//                            .ifPresent(category -> category.getProducts().remove(product));
+//                    product.setCategory(null);
+//
+//                    // Functional approach for updating cart items
+//                    cartItems.stream()
+//                            .peek(cartItem -> cartItem.setProduct(null))
+//                            .peek(CartItem::setTotalPrice)
+//                            .forEach(cartItemRepository::save);
+//
+//                    // Functional approach for updating order items
+//                    orderItems.stream()
+//                            .peek(orderItem -> orderItem.setProduct(null))
+//                            .forEach(orderItemRepository::save);
+//
+//                    productRepository.delete(product);
+//                }, () -> {
+//                    throw new EntityNotFoundException("Product not found!");
+//                });
     }
 
     @Override
@@ -109,13 +124,32 @@ public class ProductService implements IProductService {
 
     private Product updateExistingProduct(Product existingProduct, ProductUpdateRequest request) {
         existingProduct.setName(request.getName());
-        existingProduct.setBrand(request.getBrand());
-        existingProduct.setPrice(request.getPrice());
-        existingProduct.setInventory(request.getInventory());
-        existingProduct.setDescription(request.getDescription());
+        existingProduct.setCompany(request.getCompany());
+        existingProduct.setImg(request.getImg());
+        existingProduct.setPrice(request.getPrice()); // Convert price to BigDecimal
+        existingProduct.setStar(request.getStar());
+        existingProduct.setRateCount(request.getRateCount());
 
-        Category category = categoryRepository.findByName(request.getCategory().getName());
-        existingProduct.setCategory(category);
+        // Promo details
+        if (request.getPromo() != null) {
+            existingProduct.setPromoName(request.getPromo().getName());
+            existingProduct.setPromoValue(request.getPromo().getValue());
+        }
+
+        // Detail information
+        if (request.getDetail() != null) {
+            existingProduct.setScreen(request.getDetail().getScreen());
+            existingProduct.setOs(request.getDetail().getOs());
+            existingProduct.setCamara(request.getDetail().getCamara());
+            existingProduct.setCamaraFront(request.getDetail().getCamaraFront());
+            existingProduct.setCpu(request.getDetail().getCpu());
+            existingProduct.setRam(request.getDetail().getRam());
+            existingProduct.setRom(request.getDetail().getRom());
+            existingProduct.setMicroUsb(request.getDetail().getMicroUSB());
+            existingProduct.setBattery(request.getDetail().getBattery());
+        }
+
+        existingProduct.setMasp(request.getMasp());
         return existingProduct;
 
     }
@@ -176,10 +210,11 @@ public class ProductService implements IProductService {
 
     @Override
     public List<String> getAllDistinctBrands() {
-        return productRepository.findAll().stream()
-                .map(Product::getBrand)
-                .distinct()
-                .collect(Collectors.toList());
+//        return productRepository.findAll().stream()
+//                .map(Product::getBrand)
+//                .distinct()
+//                .collect(Collectors.toList());
+        return null;
     }
 
 }

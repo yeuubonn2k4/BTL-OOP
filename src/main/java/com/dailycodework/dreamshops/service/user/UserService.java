@@ -1,8 +1,10 @@
 package com.dailycodework.dreamshops.service.user;
 
+import com.dailycodework.dreamshops.data.RoleRepository;
 import com.dailycodework.dreamshops.dto.UserDto;
 import com.dailycodework.dreamshops.exceptions.AlreadyExistsException;
 import com.dailycodework.dreamshops.exceptions.ResourceNotFoundException;
+import com.dailycodework.dreamshops.model.Role;
 import com.dailycodework.dreamshops.model.User;
 import com.dailycodework.dreamshops.repository.UserRepository;
 import com.dailycodework.dreamshops.request.CreateUserRequest;
@@ -22,6 +24,7 @@ public class UserService implements IUserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Override
     public User getUserById(Long userId) {
@@ -40,6 +43,11 @@ public class UserService implements IUserService {
                     user.setEmail(request.getEmail());
                     user.setUserName(request.getUserName());
                     user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+                    // Fetch or create roles
+                    Role userRole = roleRepository.findByName("ROLE_USER")
+                            .orElseThrow(() -> new RuntimeException("Role ROLE_USER not found"));
+                    user.getRoles().add(userRole);
                     return  userRepository.save(user);
                 }) .orElseThrow(() -> new AlreadyExistsException("Oops!" +request.getEmail() +" already exists!"));
     }

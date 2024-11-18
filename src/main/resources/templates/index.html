@@ -91,11 +91,11 @@
 
 			<div class="tools-member">
 				<div class="member">
-					<a onclick="checkTaiKhoan()">
+					<a id="taiKhoanLink" onclick="toggleMemberMenu()">
 						<i class="fa fa-user"></i>
 						<span id="taiKhoanText">Tài khoản</span>
 					</a>
-					<div class="menuMember hide">
+					<div class="menuMember hide" id="menuMember">
 						<a href="nguoidung">Trang người dùng</a>
 						<a onclick="if(window.confirm('Xác nhận đăng xuất ?')) logOut();">Đăng xuất</a>
 					</div>
